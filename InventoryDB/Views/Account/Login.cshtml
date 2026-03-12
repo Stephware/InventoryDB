@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    /* Custom Color Palette & Styling */
+    .brand-color {
+        color: #4F46E5;
+    }
+    /* Indigo */
+    .bg-brand {
+        background-color: #4F46E5;
+        border-color: #4F46E5;
+    }
+
+        .bg-brand:hover {
+            background-color: #4338ca;
+            border-color: #4338ca;
+        }
+
+    .page-wrapper {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    }
+
+    .card-custom {
+        border-radius: 1.25rem;
+        border: none;
+    }
+
+    .form-control:focus {
+        border-color: #4F46E5;
+        box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center vh-100 page-wrapper">
+    <div class="card shadow-lg p-5 card-custom" style="width:420px;">
+
+        <div class="text-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" class="bi bi-box-seam brand-color mb-3" viewBox="0 0 16 16">
+                <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.84L1 4.239v7.923zM2.623 3.082l2.4-1.441 5.961 3.576-2.4 1.441z" />
+            </svg>
+            <h3 class="fw-bold text-dark">Inventory System</h3>
+            <p class="text-muted small">Welcome back! Please login to your account.</p>
+        </div>
+
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-secondary">Username</label>
+                <input type="text" name="username" class="form-control form-control-lg bg-light" placeholder="Enter username" required />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold text-secondary">Password</label>
+                <input type="password" name="password" class="form-control form-control-lg bg-light" placeholder="Enter password" required />
+            </div>
+
+            <button type="submit" class="btn bg-brand text-white w-100 py-2 fw-bold fs-5">Login</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <small class="text-muted">Don't have an account?</small><br />
+            <a href="/Account/Register" class="text-decoration-none brand-color fw-semibold">Create an account</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Trigger Error Popup if login fails
+        @if (ViewBag.Error != null)
+        {
+                <text>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: '@ViewBag.Error',
+                    confirmButtonColor: '#4F46E5'
+                });
+                </text>
+        }
+
+        // Trigger Success Popup if redirected here after registration
+        @if (TempData["Success"] != null)
+        {
+                <text>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '@TempData["Success"]',
+                    confirmButtonColor: '#4F46E5'
+                });
+                </text>
+        }
+    });
+</script>

@@ -1,0 +1,122 @@
+﻿@{
+    var username = Context.Session.GetString("Username") ?? "User";
+}
+
+@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - InventoryDB</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/InventoryDB.styles.css" asp-append-version="true" />
+
+    <style>
+        .brand-color {
+            color: #4F46E5 !important;
+        }
+
+        .bg-brand {
+            background-color: #4F46E5 !important;
+        }
+
+        .btn-brand {
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+        }
+
+            .btn-brand:hover {
+                background-color: #4338ca;
+                color: white;
+            }
+
+        .btn-outline-brand {
+            border-color: #4F46E5;
+            color: #4F46E5;
+        }
+
+            .btn-outline-brand:hover {
+                background-color: #4F46E5;
+                color: white;
+            }
+    </style>
+</head>
+<body class="bg-light">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+            <div class="container">
+
+                <a class="navbar-brand d-flex align-items-center fw-bold brand-color" href="/">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-box-seam me-2" viewBox="0 0 16 16">
+                        <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.84L1 4.239v7.923zM2.623 3.082l2.4-1.441 5.961 3.576-2.4 1.441z" />
+                    </svg>
+                    InventoryDB
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" href="/">Home</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                        @if (Context.Session.GetInt32("UserId") != null)
+                        {
+                            <li class="nav-item me-3">
+                                <span class="navbar-text brand-color fw-bold">
+                                    Hi, @username 👋
+                                </span>
+                            </li>
+                            <li class="nav-item me-3">
+                                <a class="nav-link fw-medium" href="/Inventory">My Inventory</a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" action="/Account/Logout" onsubmit="return confirm('Are you sure you want to logout?');" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm fw-semibold px-3">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item me-2">
+                                <a class="btn btn-outline-brand btn-sm fw-semibold px-3" href="/Account/Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-brand btn-sm fw-semibold px-3" href="/Account/Register">Register</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted bg-white mt-auto py-3">
+        <div class="container text-center">
+            &copy; 2026 - InventoryDB - <a asp-area="" asp-controller="Home"  class="brand-color text-decoration-none">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

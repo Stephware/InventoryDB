@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using InventoryDB.Models.Database;
 using InventoryDB.Repository.Inventories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryDB.Controllers
 {
+    [Authorize]
     public class InventoryController : Controller
     {
         private readonly IInventoryRepository _inventoryRepository;

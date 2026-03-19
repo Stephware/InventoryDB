@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 public class AccountController : Controller
 {
@@ -13,7 +16,6 @@ public class AccountController : Controller
     {
         _userRepository = userRepository;
     }
-
     public IActionResult Register()
     {
         return View();
@@ -36,19 +38,19 @@ public class AccountController : Controller
 
         _userRepository.AddUser(user);
 
+        TempData["Success"] = "Registration successful! Please log in.";
         return RedirectToAction("Login");
     }
-
     public IActionResult Login()
     {
         return View();
     }
 
+
     [HttpPost]
-    public IActionResult Login(string username, string password)
+    public async Task<IActionResult> Login(string username, string password)
     {
         var passwordHash = HashPassword(password);
-
         var user = _userRepository.ValidateUser(username, passwordHash);
 
         if (user == null)
@@ -60,12 +62,28 @@ public class AccountController : Controller
         HttpContext.Session.SetInt32("UserId", user.Id);
         HttpContext.Session.SetString("Username", user.Username);
 
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Username)
+        };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+        TempData["Success"] = "Welcome back!";
+
         return RedirectToAction("Index", "Inventory");
     }
 
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
-        HttpContext.Session.Clear();
+        HttpContext.Session.Clear();    
+
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
         return RedirectToAction("Login", "Account");
     }
 
